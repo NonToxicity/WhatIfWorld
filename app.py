@@ -2,7 +2,9 @@ import flask
 from flask import request
 import pandas as pd
 from datetime import datetime as dt
+import requests
 
+URL = "https://api.covid19api.com"
 data = pd.read_csv('data.csv', names=['s', 'e', 'm']).set_index('m')
 
 series = pd.Series(index=range(data.s.min(), dt.now().year + 1))
@@ -14,8 +16,45 @@ app = flask.Flask(__name__)
 
 @app.route('/', methods=['GET'])
 def home():
-    year = int(request.args['year'])
-    try:
-        return series.loc[year]
-    except KeyError:
-        return f'Invalid input ({series.index.min()} - {series.index.max()})'
+    return "root"
+
+
+@app.route('/countries')
+def getCountries():
+    countries = requests.get(URL + '/countries').json()
+    return str(countries)
+
+@app.route('/dayone')
+def getDayOne():
+    country = request.args.get('country', default='south-africa', type=str)
+    dayone = requests.get(URL + '/dayone/country/' + country + '/status/' + 'confirmed').json()
+    return str(dayone)
+
+@app.route('/summary')
+def getSummary():
+    summary = requests.get(URL + '/summary').json()
+    return str(summary)
+
+@app.route('/statusbycountry')
+def getstatus():
+    country = request.args.get('country', default='south-africa', type=str)
+    summary = requests.get(URL +'/country/'+country+'?from=2020-03-01T00:00:00Z&to=2020-04-01T00:00:00Z').json()
+    return str(summary)
+
+@app.route('/traveldatabycountry')
+def getTravelData():
+    country = request.args.get('country', default='south-africa', type=str)
+    headers = {'X-Access-Token': '5cf9dfd5-3449-485e-b5ae-70a60e997864'}
+    summary = requests.get(URL +'/premium/travel/country/'+country, headers=headers).json()
+    return str(summary)
+
+
+@app.route('/testsbycountry')
+def getTestData():
+    country = request.args.get('country', default='south-africa', type=str)
+    headers = {'X-Access-Token': '5cf9dfd5-3449-485e-b5ae-70a60e997864'}
+    summary = requests.get(URL +'/premium/country/testing/'+country, headers=headers).json()
+    return str(summary)
+
+#if __name__ == '__main__':
+#    app.run(debug=True)
