@@ -2,6 +2,7 @@ import flask
 from flask import request
 import pandas as pd
 from datetime import datetime as dt
+import requests
 
 data = pd.read_csv('data.csv', names=['s', 'e', 'm']).set_index('m')
 
@@ -15,7 +16,8 @@ app = flask.Flask(__name__)
 @app.route('/', methods=['GET'])
 def home():
     year = int(request.args['year'])
+    countries = requests.get('https://api.covid19api.com/countries')
     try:
-        return series.loc[year]
+        return countries
     except KeyError:
         return f'Invalid input ({series.index.min()} - {series.index.max()})'
