@@ -57,6 +57,14 @@ def getTestData():
     return str(summary)
 
 
+
+@app.route('/register')
+def register():
+    username = request.args.get('username', type=str)
+    password = request.args.get('password', type=str)
+    return "User Registered succesfully, 200"
+
+
 @app.route('/login')
 def login():
     username = request.args.get('username', type=str)
