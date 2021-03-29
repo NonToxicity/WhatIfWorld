@@ -56,5 +56,12 @@ def getTestData():
     summary = requests.get(URL +'/premium/country/testing/'+country, headers=headers).json()
     return str(summary)
 
+
+@app.route('/login')
+def login():
+    username = request.args.get('username', type=str)
+    password = request.args.get('password', type=str)
+    return "User logged in, 200"
+
 #if __name__ == '__main__':
 #    app.run(debug=True)
