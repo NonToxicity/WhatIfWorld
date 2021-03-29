@@ -57,6 +57,15 @@ def getTestData():
     return str(summary)
 
 
+@app.route('/whatifbycountry')
+def getWhatIfByCountry():
+    country = request.args.get('country', default='south-africa', type=str)
+    date = request.args.get('date', default=1, type=int)
+    handwash = request.args.get('handwash', default=1.0, type=float)
+    restriction = request.args.get('restriction', default=0, type=int)
+    cigarette = request.args.get('cigarette', default=0, type=float)
+    return 1689
+
 
 @app.route('/register')
 def register():
