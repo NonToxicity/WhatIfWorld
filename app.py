@@ -25,15 +25,17 @@ def home():
     return "root"
 
 
-@app.route('/countries')
+@app.route('/countries', methods=['GET'])
 def getCountries():
     countries = requests.get(URL + '/countries').json()
+    countries.headers.add("Access-Control-Allow-Origin", "*")
     return str(countries)
 
 @app.route('/dayone')
 def getDayOne():
     country = request.args.get('country', default='south-africa', type=str)
     dayone = requests.get(URL + '/dayone/country/' + country + '/status/' + 'confirmed').json()
+    dayone.headers.add("Access-Control-Allow-Origin", "*")
     return str(dayone)
 
 @app.route('/summary')
