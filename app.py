@@ -14,7 +14,7 @@ for m in data.index:
     series.loc[data.loc[m].s:data.loc[m].e] = m
 
 app = flask.Flask(__name__)
-cors = CORS(app)
+cors = CORS(app, resources={r"/foo": {"origins": "http://localhost:4200/"}})
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 
