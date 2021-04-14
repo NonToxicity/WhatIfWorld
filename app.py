@@ -3,6 +3,8 @@ from flask import request
 import pandas as pd
 from datetime import datetime as dt
 import requests
+from flask_cors import CORS, cross_origin
+
 
 URL = "https://api.covid19api.com"
 data = pd.read_csv('data.csv', names=['s', 'e', 'm']).set_index('m')
@@ -12,9 +14,13 @@ for m in data.index:
     series.loc[data.loc[m].s:data.loc[m].e] = m
 
 app = flask.Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 
 @app.route('/', methods=['GET'])
+@cross_origin()
+
 def home():
     return "root"
 
@@ -64,21 +70,21 @@ def getWhatIfByCountry():
     handwash = request.args.get('handwash', default=1.0, type=float)
     restriction = request.args.get('restriction', default=0, type=int)
     cigarette = request.args.get('cigarette', default=0, type=float)
-    return 1689
+    return "[newCases:1689]"
 
 
 @app.route('/register')
 def register():
     username = request.args.get('username', type=str)
     password = request.args.get('password', type=str)
-    return "User Registered succesfully, 200"
+    return "[message: User Registered succesfully, status:200]"
 
 
 @app.route('/login')
 def login():
     username = request.args.get('username', type=str)
     password = request.args.get('password', type=str)
-    return "User logged in, 200"
+    return "[message: User Logged in succesfully, status:200]"
 
 #if __name__ == '__main__':
 #    app.run(debug=True)
